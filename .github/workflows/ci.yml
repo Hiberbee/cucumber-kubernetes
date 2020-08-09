@@ -1,0 +1,32 @@
+name: Continuous Integration
+on: push
+jobs:
+  gradle:
+    name: Gradle build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+      - name: Build project with Gradle
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build
+      - name: Test tagged features
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: taggedFeatures
+      - name: Test untagged features
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: untaggedFeatures
+      - name: Analyze sources with Sonarqube
+        uses: eskatos/gradle-command-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: sonarqube

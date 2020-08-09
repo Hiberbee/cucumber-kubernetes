@@ -1,0 +1,31 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Feature: Examples" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" nameIsGenerated="true">
+    <option name="CUCUMBER_CORE_VERSION" value="5" />
+    <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/resources/features/Examples.feature" />
+    <option name="GLUE" value="com.hiberbee" />
+    <option name="MAIN_CLASS_NAME" value="io.cucumber.core.cli.Main" />
+    <module name="template-java-cucumber.test" />
+    <option name="PROGRAM_PARAMETERS" value="--plugin pretty --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm5SMFormatter" />
+    <option name="SUGGESTED_NAME" value="Feature: Examples" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.hiberbee.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+      </ENTRIES>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: 'off'
+logging:
+  level:
+    root: info
+    org.hibernate: error
+    com.zaxxer: warn
+    org.springframework: warn
+    org.springframework.cglib: error
+    com.hiberbee: debug

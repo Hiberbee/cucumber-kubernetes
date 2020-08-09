@@ -1,0 +1,183 @@
+plugins {
+  id("application")
+  id("idea")
+  id("jacoco")
+  id("java-library")
+  id("com.github.ben-manes.versions") version "0.29.0"
+  id("org.jetbrains.gradle.plugin.idea-ext") version "0.8.1"
+  id("org.sonarqube") version "3.0"
+  id("org.springframework.boot") version "2.3.2.RELEASE"
+}
+
+def VERSIONS = [
+  assertj   : "3.16.1",
+  cucumber  : "6.4.0",
+  junit     : "5.7.0-M1",
+  gradle    : "6.6-rc-6",
+  springBoot: "2.3.2.RELEASE"
+]
+
+def organization = "hiberbee"
+group "dev.${organization}"
+version "1.0.0"
+
+application {
+  mainClassName = "${project.group}.Application" as String
+}
+
+springBoot {
+  buildInfo()
+}
+
+class CucumberTask extends JavaExec {
+
+  @Input
+  CucumberTask withTags(String... tags) {
+    tags.each {
+      args += ["--include-tag", it]
+    }
+    return this
+  }
+
+  @Input
+  CucumberTask withoutTags(String... tags) {
+    tags.each {
+      args += ["--exclude-tag", it]
+    }
+    return this
+  }
+
+  @Input
+  CucumberTask withPackage(String packageName = "features") {
+    args += ["--select-package", packageName]
+    return this
+  }
+
+  @Input
+  CucumberTask withProperties(Map<String, Object> properties) {
+    properties.each {
+      jvmArgs += "-D${it.key}=${it.value}"
+    }
+    return this
+  }
+
+  CucumberTask() {
+    group "cucumber"
+    dependsOn project.tasks.getByName("testClasses"), project.tasks.getByName("processResources")
+    outputs.dir "${project.buildDir}/reports"
+    main "org.junit.platform.console.ConsoleLauncher"
+    classpath project.
+      convention.getPlugin(JavaPluginConvention.class).getSourceSets().findByName("test").runtimeClasspath
+    args "--include-engine", "cucumber", "--reports-dir", "${project.buildDir}/reports"
+    finalizedBy project.tasks.getByName("jacocoTestReport")
+  }
+}
+
+tasks {
+  compileJava {
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
+    options.fork = true
+    options.warnings = false
+    options.incremental = true
+    dependsOn tasks.getByName("processResources")
+  }
+  dependencyUpdates {
+    checkConstraints true
+  }
+  idea {
+    project {
+      settings {
+        copyright {
+          useDefault = "MIT"
+          profiles {
+            MIT {
+              notice = file("LICENSE").readLines().join("\n")
+            }
+          }
+        }
+      }
+    }
+    module {
+      outputDir project.buildDir
+      downloadJavadoc false
+      downloadSources true
+      inheritOutputDirs true
+      excludeDirs += files(".gradle", ".idea", ".scannerwork", "gradle")
+      generatedSourceDirs += files(
+        "${project.buildDir}/generated/sources/annotationProcessor/java/main",
+        "${project.buildDir}/generated/sources/annotationProcessor/java/test"
+      )
+    }
+  }
+  sonarqube {
+    properties {
+      property "sonar.login", System.getenv("SONAR_TOKEN")
+      property "sonar.organization", organization
+      property "sonar.projectKey", project.name
+      property "sonar.projectName", project.name
+      property "sonar.host.url", "https://sonarcloud.io"
+      property "sonar.java.binaries", "${project.buildDir}/libs"
+      property "sonar.java.libraries", "${project.buildDir}/classes/java/main"
+      property "sonar.java.test.libraries", "${project.buildDir}/classes/java/test"
+      property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/*.xml"
+    }
+  }
+  jacocoTestReport {
+    reports {
+      xml.enabled true
+      csv.enabled false
+      html.enabled true
+      html.destination file("${project.buildDir}/reports/jacoco")
+    }
+  }
+  test {
+    useJUnitPlatform {
+      failFast true
+    }
+    scanForTestClasses false
+    jacoco {
+      enabled true
+      dumpOnExit true
+    }
+    finalizedBy tasks.getByName("jacocoTestReport")
+  }
+  wrapper {
+    gradleVersion VERSIONS.gradle
+    distributionType Wrapper.DistributionType.ALL
+  }
+}
+
+tasks.register("allFeatures", CucumberTask) {
+  it.withPackage("${project.group}.features")
+}
+tasks.register("taggedFeatures", CucumberTask) {
+  it.withPackage("${project.group}.features")
+    .withTags("Tag")
+}
+tasks.register("untaggedFeatures", CucumberTask) {
+  it.withPackage("${project.group}.features")
+    .withoutTags("Tag")
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation platform("org.springframework.boot:spring-boot-dependencies:$VERSIONS.springBoot")
+  implementation platform("io.cucumber:cucumber-core:$VERSIONS.cucumber")
+  testImplementation platform("org.junit:junit-bom:$VERSIONS.junit")
+  testRuntimeOnly platform("org.junit:junit-bom:$VERSIONS.junit")
+
+  implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("io.cucumber:cucumber-java")
+  implementation("io.cucumber:cucumber-spring")
+  implementation("org.assertj:assertj-core:$VERSIONS.assertj")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+  testImplementation("io.cucumber:cucumber-junit-platform-engine")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+  testRuntimeOnly("org.junit.platform:junit-platform-console")
+  testRuntimeOnly("org.junit.platform:junit-platform-runner")
+}
