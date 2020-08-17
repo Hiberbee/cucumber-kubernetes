@@ -14,7 +14,7 @@ def VERSIONS = [
   cucumber  : "6.4.0",
   junit     : "5.7.0-M1",
   gradle    : "6.6-rc-6",
-  springBoot: "2.3.2.RELEASE"
+  springBoot: "2.3.3.RELEASE"
 ]
 
 def organization = "hiberbee"
