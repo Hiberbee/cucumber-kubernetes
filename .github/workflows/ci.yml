@@ -14,15 +14,8 @@ jobs:
         with:
           java-version: 14
       - name: Test features
-        uses: eskatos/gradle-command-action@v1
+        run: sh gradlew features
         env:
           FEATURES_DIR: ${{ github.workspace }}/features
         with:
           arguments: features
-      - name: Analyze sources with Sonarqube
-        uses: eskatos/gradle-command-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: sonarqube
