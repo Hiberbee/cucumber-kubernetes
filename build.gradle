@@ -62,6 +62,8 @@ if (!System.getenv().hasProperty("CI") || !System.getenv("CI")) {
         property "sonar.projectKey", project.name
         property "sonar.projectName", project.name
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.scm.provider", "git"
+        property "sonar.branch.name", "latest"
         property "sonar.java.binaries", "${project.buildDir}/libs"
         property "sonar.java.libraries", "${project.buildDir}/classes/java/main"
         property "sonar.java.test.libraries", "${project.buildDir}/classes/java/test"
@@ -139,10 +141,6 @@ tasks {
   test {
     useJUnitPlatform {
       failFast true
-    }
-    testLogging {
-      showStandardStreams = false
-      events = ["passed", "failed", "skipped"]
     }
     scanForTestClasses false
   }
