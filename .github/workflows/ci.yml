@@ -17,5 +17,3 @@ jobs:
         run: sh gradlew features
         env:
           FEATURES_DIR: ${{ github.workspace }}/features
-        with:
-          arguments: features
