@@ -114,7 +114,7 @@ class CucumberTask extends JavaExec {
 
   CucumberTask() {
     group "cucumber"
-    dependsOn project.tasks.getByName("testClasses"), project.tasks.getByName("processResources")
+    dependsOn project.tasks.getByName("build"), project.tasks.getByName("testClasses")
     outputs.dir "${project.buildDir}/reports"
     main "org.junit.platform.console.ConsoleLauncher"
     classpath project.convention.getPlugin(JavaPluginConvention.class).sourceSets.findByName("test").runtimeClasspath
@@ -149,8 +149,8 @@ tasks {
 }
 
 String[] featureDirs = System.getenv().hasProperty("FEATURES_DIR")
-  ? (System.getenv("FEATURES_DIR").split(":"))
-  : ["${project.buildDir}/resources/test/${project.group.toString().split('.').join('/')}/features"]
+  ? System.getenv("FEATURES_DIR").split(":")
+  : ["${project.buildDir}/resources/test/${project.group.toString().replace('.', '/')}/features"]
 tasks.register("features", CucumberTask) {
 //  it.withTags(java.util.Optional.ofNullable(System.getProperty("tags.include")).map(it->it.split(","))
 //  it.withoutTags(System.getProperty("tags.exclude", "").split(","))
