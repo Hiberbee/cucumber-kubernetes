@@ -22,44 +22,49 @@
  * SOFTWARE.
  */
 
-package dev.hiberbee.features;
+package dev.hiberbee.dsl;
 
-import dev.hiberbee.configurations.ApplicationConfiguration;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.annotation.EnableCaching;
+import javax.annotation.Nonnull;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-@EnableCaching
-@SpringBootTest(classes = {ApplicationConfiguration.class, SampleSteps.class})
-class SampleStepsTest {
+public enum Maybe {
+  CONTAINS,
+  SHOULD_BE,
+  SHOULD_NOT_BE,
+  IS_NOT,
+  IS,
+  HAS_NOT,
+  HAS,
+  HAVE,
+  HAVE_NOT,
+  ARE,
+  ARE_NOT;
 
-  @Autowired private SampleSteps sampleSteps;
-
-  @Test
-  void testStepExample() {
-    this.sampleSteps.stepExample();
+  public @Nonnull Predicate<Boolean> predicate() {
+    return Predicate.isEqual(
+        Predicate.isEqual(IS)
+            .or(Predicate.isEqual(ARE))
+            .or(Predicate.isEqual(SHOULD_BE))
+            .or(Predicate.isEqual(HAS))
+            .or(Predicate.isEqual(HAVE))
+            .or(Predicate.isEqual(CONTAINS))
+            .test(this));
   }
 
-  @Test
-  void testStepExampleWithParameter() {
-    this.sampleSteps.stepExampleWithParameter("Something");
+  public @Nonnull Boolean plural() {
+    return this.equals(ARE) || this.equals(HAVE);
   }
 
-  @Test
-  void testStepExampleWithBeanDependency() {
-    this.sampleSteps.stepExampleWithBeanDependency();
+  public @Nonnull Boolean yes() {
+    return this.predicate().test(true);
   }
 
-  @Test
-  void testStepReturnsExample() {
-    final var expected = "test";
-    final var actual = this.sampleSteps.stepReturnsExample(expected);
-    Assertions.assertEquals(expected, actual);
+  public @Nonnull Boolean no() {
+    return this.predicate().test(false);
   }
 
-  @Test
-  void testValuePersistenceExample() {
-    this.sampleSteps.stepValuePersistenceExample(this.sampleSteps.stepReturnsExample("test"));
+  public @Nonnull Optional<Boolean> optional() {
+    return Optional.of(this.yes());
   }
 }

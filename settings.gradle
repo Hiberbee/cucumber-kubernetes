@@ -3,3 +3,11 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
+
+buildCache {
+  local {
+    enabled(true)
+  }
+}
+
+enableFeaturePreview('ONE_LOCKFILE_PER_PROJECT')

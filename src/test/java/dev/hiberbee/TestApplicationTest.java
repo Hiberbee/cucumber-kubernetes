@@ -24,31 +24,32 @@
 
 package dev.hiberbee;
 
-import dev.hiberbee.configurations.ApplicationConfiguration;
+import io.cucumber.junit.platform.engine.Cucumber;
 import io.cucumber.spring.CucumberContextConfiguration;
+import io.fabric8.kubernetes.client.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.*;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.*;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 
 @EnableCaching
 @SpringBootTest(
-    classes = ApplicationConfiguration.class,
+    classes = TestApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @CucumberContextConfiguration
+@Cucumber
 class TestApplicationTest {
 
+  @Autowired private KubernetesClient kubernetesClient;
   @Autowired private CacheManager cacheManager;
 
-  @Value("#{cacheManager.getCache('cucumber')}")
-  private Cache cache;
-
   @Test
-  void testCache() {
+  void testAutoConfiguration() {
     Assertions.assertThat(this.cacheManager).isInstanceOf(ConcurrentMapCacheManager.class);
-    Assertions.assertThat(this.cache).isInstanceOf(ConcurrentMapCache.class);
+    Assertions.assertThat(this.cacheManager.getCacheNames()).contains("cucumber");
+    Assertions.assertThat(this.kubernetesClient).isInstanceOf(DefaultKubernetesClient.class);
   }
 }

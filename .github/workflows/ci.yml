@@ -1,28 +1,24 @@
 name: Continuous Integration
 on: push
 jobs:
-  gradle:
-    name: Gradle build
-    runs-on: ubuntu-latest
+  features:
+    name: Kubernetes features
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+      - name: Setup Minikube
+        uses: hiberbee/github-action-minikube@latest
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 14
-      - name: Build project with Gradle
+      - name: Test features
         uses: eskatos/gradle-command-action@v1
+        env:
+          FEATURES_DIR: ${{ github.workspace }}/features
         with:
-          arguments: build
-      - name: Test tagged features
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: taggedFeatures
-      - name: Test untagged features
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: untaggedFeatures
+          arguments: features
       - name: Analyze sources with Sonarqube
         uses: eskatos/gradle-command-action@v1
         env:

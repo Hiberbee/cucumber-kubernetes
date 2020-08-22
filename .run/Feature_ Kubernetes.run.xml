@@ -1,16 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Feature: Examples" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" nameIsGenerated="true">
+  <configuration default="false" name="Feature: Kubernetes" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" nameIsGenerated="true">
     <option name="CUCUMBER_CORE_VERSION" value="5" />
-    <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/resources/features/Examples.feature" />
-    <option name="GLUE" value="com.hiberbee" />
+    <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/resources/dev/hiberbee/features/Kubernetes.feature" />
+    <option name="GLUE" value="dev.hiberbee" />
     <option name="MAIN_CLASS_NAME" value="io.cucumber.core.cli.Main" />
-    <module name="template-java-cucumber.test" />
-    <option name="PROGRAM_PARAMETERS" value="--plugin pretty --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm5SMFormatter" />
-    <option name="SUGGESTED_NAME" value="Feature: Examples" />
+    <module name="cucumber-kubernetes.test" />
+    <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvm5SMFormatter" />
+    <option name="SUGGESTED_NAME" value="Feature: Kubernetes" />
     <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.hiberbee.*" />
+        <option name="PATTERN" value="io.cucumber.core.cli.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

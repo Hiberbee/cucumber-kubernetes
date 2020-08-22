@@ -3,9 +3,9 @@ spring:
     banner-mode: 'off'
 logging:
   level:
-    root: info
-    org.hibernate: error
     com.zaxxer: warn
-    org.springframework: warn
+    dev.hiberbee: debug
+    io.fabric8: error
     org.springframework.cglib: error
-    com.hiberbee: debug
+    org.springframework: warn
+    root: info

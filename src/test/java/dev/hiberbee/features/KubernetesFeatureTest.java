@@ -22,43 +22,16 @@
  * SOFTWARE.
  */
 
-package dev.hiberbee.configurations;
+package dev.hiberbee.features;
 
-import com.google.common.base.Converter;
-import dev.hiberbee.TestApplication;
-import io.fabric8.kubernetes.client.*;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
-import org.springframework.context.annotation.*;
+import dev.hiberbee.configurations.ApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.annotation.EnableCaching;
 
-import javax.annotation.Nonnull;
+@EnableCaching
+@SpringBootTest(classes = {ApplicationConfiguration.class, KubernetesFeature.class})
+class KubernetesFeatureTest {
 
-@Configuration
-@ComponentScan(basePackageClasses = TestApplication.class)
-public class ApplicationConfiguration {
-
-  @Bean
-  public Converter<String, String> dslNameConverter() {
-    return new Converter<>() {
-      @Override
-      protected String doForward(final @Nonnull String s) {
-        return s.toUpperCase().replace(' ', '_');
-      }
-
-      @Override
-      protected String doBackward(final @Nonnull String s) {
-        return s.toLowerCase().replace('_', ' ');
-      }
-    };
-  }
-
-  @Bean
-  public CacheManager cacheManager() {
-    return new ConcurrentMapCacheManager("cucumber");
-  }
-
-  @Bean
-  public KubernetesClient kubernetesClient() {
-    return new DefaultKubernetesClient();
-  }
+  @Autowired private KubernetesFeature sampleSteps;
 }
