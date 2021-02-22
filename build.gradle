@@ -12,7 +12,7 @@ def VERSIONS = [
   guava               : "29.0-jre",
   springBoot          : "2.3.3.RELEASE",
   kubernetesAssertions: "4.0.0",
-  kubernetesClient    : "4.10.3",
+  kubernetesClient    : "5.1.0",
 ]
 
 def organization = "hiberbee"
