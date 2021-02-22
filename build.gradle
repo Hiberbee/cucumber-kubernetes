@@ -10,7 +10,7 @@ def VERSIONS = [
   cucumber            : "6.5.1",
   junit               : "5.7.0-RC1",
   guava               : "29.0-jre",
-  springBoot          : "2.3.3.RELEASE",
+  springBoot          : "2.4.3",
   kubernetesAssertions: "4.0.0",
   kubernetesClient    : "4.10.3",
 ]
