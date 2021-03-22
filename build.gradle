@@ -7,7 +7,7 @@ plugins {
 
 def VERSIONS = [
   assertj             : "3.17.0",
-  cucumber            : "6.5.1",
+  cucumber            : "6.10.2",
   junit               : "5.7.0-RC1",
   guava               : "29.0-jre",
   springBoot          : "2.3.3.RELEASE",
